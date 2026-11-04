@@ -5,6 +5,8 @@
  3. Ejecutar simulación FIFO
  4. Ejecutar simulación SJF
  5. Ejecutar simulación SRTF
+ 6. Ejecutar simulación Round Robin (configurar quantum)
+ 7. Cargar caso Round Robin (10 procesos + bloqueo)
  0. Salir
 
 Seleccione una opción: Caso predefinido cargado.
@@ -28,6 +30,8 @@ P10          9       4   -
  3. Ejecutar simulación FIFO
  4. Ejecutar simulación SJF
  5. Ejecutar simulación SRTF
+ 6. Ejecutar simulación Round Robin (configurar quantum)
+ 7. Cargar caso Round Robin (10 procesos + bloqueo)
  0. Salir
 
 Seleccione una opción: === TRAZA DE SIMULACIÓN: FIFO ===
@@ -199,6 +203,8 @@ Nota: Espera = tiempo acumulado en la cola de Listos; el tiempo Bloqueado NO cue
  3. Ejecutar simulación FIFO
  4. Ejecutar simulación SJF
  5. Ejecutar simulación SRTF
+ 6. Ejecutar simulación Round Robin (configurar quantum)
+ 7. Cargar caso Round Robin (10 procesos + bloqueo)
  0. Salir
 
 Seleccione una opción: === TRAZA DE SIMULACIÓN: SJF ===
@@ -376,6 +382,8 @@ Nota: Espera = tiempo acumulado en la cola de Listos; el tiempo Bloqueado NO cue
  3. Ejecutar simulación FIFO
  4. Ejecutar simulación SJF
  5. Ejecutar simulación SRTF
+ 6. Ejecutar simulación Round Robin (configurar quantum)
+ 7. Cargar caso Round Robin (10 procesos + bloqueo)
  0. Salir
 
 Seleccione una opción: === TRAZA DE SIMULACIÓN: SRTF ===
@@ -552,6 +560,8 @@ Nota: Espera = tiempo acumulado en la cola de Listos; el tiempo Bloqueado NO cue
  3. Ejecutar simulación FIFO
  4. Ejecutar simulación SJF
  5. Ejecutar simulación SRTF
+ 6. Ejecutar simulación Round Robin (configurar quantum)
+ 7. Cargar caso Round Robin (10 procesos + bloqueo)
  0. Salir
 
 Seleccione una opción: Fin del programa.

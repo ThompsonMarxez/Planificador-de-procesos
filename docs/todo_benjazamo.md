@@ -11,7 +11,7 @@
 - [x] Verificar las métricas y el Gantt: Comprobar inicio, finalización, espera, retorno, respuesta y línea temporal.
 
 3. Integrar los trabajos de tus compañeros
-- [ ] Integrar Round Robin de José Luna: Conectar su algoritmo al motor y comprobar la gestión del quantum.
+- [x] Integrar Round Robin de José Luna: Algoritmo registrado, menú con quantum configurable y pruebas de rotación, llegadas, E/S y métricas.
 - [ ] Integrar prioridades de Francisco: Conectar su planificador y verificar selección y desempates.
 - [ ] Integrar el menú del otro Benja: Conectar los cinco algoritmos, ingreso de procesos y visualización de resultados.
 - [ ] Resolver errores de integración: Revisar imports, interfaces, estados compartidos y posibles regresiones.
