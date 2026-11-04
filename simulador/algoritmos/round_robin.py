@@ -1,29 +1,30 @@
-"""Round Robin  ->  responsable: José Luna.
+"""Planificador Round Robin (responsable: José Luna).
 
-ERROR 404: CODE NOT FOUND
-    (   )
-   ( o_o )   "Aquí debería haber un Round Robin, pero el quantum
-    |   |     se fue a dar vueltas y todavía no vuelve a la cola."
-   /|___|\\
-
-Qué hay que hacer (ver todo.md, secciones 2 y 3):
-  - Heredar de `Planificador` (algoritmos/base.py) y ponerle `nombre = "RR"`.
-  - Recibir el quantum (> 0) en el constructor y exponerlo en `self.quantum`;
-    el motor lo leerá para interrumpir al proceso al agotarlo y devolverlo
-    al FINAL de la cola de listos.
-  - `seleccionar(listos)`: cola circular -> devolver `listos[0]`.
-  - Registrarlo en `algoritmos/__init__.py` (diccionario ALGORITMOS).
+Selecciona el primer proceso de la cola de listos. El motor administra el
+quantum y devuelve al final de la cola los procesos que agotan su turno;
+el planificador no retira ni reordena procesos.
 """
+from typing import List
+
 from .base import Planificador
+from ..modelos import Proceso
 
 
 class PlanificadorRoundRobin(Planificador):
+    """Turnos FIFO con un quantum entero positivo (4 unidades por defecto).
+
+    La expropiación por tiempo la realiza el motor al leer ``quantum``.
+    No se usa ``apropiativo``: esa bandera habilita expropiaciones por
+    prioridad o tiempo restante, no el vencimiento del turno.
+    """
+
     nombre = "RR"
 
     def __init__(self, quantum: int = 4):
-        raise NotImplementedError(
-            "404 - Code not found: Round Robin aún no existe. "
-            "Pregúntale a José Luna :)")
+        if isinstance(quantum, bool) or not isinstance(quantum, int) or quantum <= 0:
+            raise ValueError("El quantum debe ser un entero mayor que cero.")
+        self.quantum = quantum
 
-    def seleccionar(self, listos):
-        raise NotImplementedError("404 - Code not found (José Luna)")
+    def seleccionar(self, listos: List[Proceso]) -> Proceso:
+        """Devuelve la cabeza sin modificar la cola; el motor la pasa no vacía."""
+        return listos[0]

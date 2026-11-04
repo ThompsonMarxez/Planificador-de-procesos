@@ -13,6 +13,8 @@ class AppConsola:
  3. Ejecutar simulación FIFO
  4. Ejecutar simulación SJF
  5. Ejecutar simulación SRTF
+ 6. Ejecutar simulación Round Robin (configurar quantum)
+ 7. Cargar caso Round Robin (10 procesos + bloqueo)
  0. Salir
 """
 
@@ -24,9 +26,29 @@ class AppConsola:
         print("Caso predefinido cargado.")
         self.mostrar_procesos()
 
+    def cargar_caso_rr(self):
+        self.carga.cargar_caso_rr()
+        print("Caso Round Robin cargado.")
+        self.mostrar_procesos()
+
+    def ejecutar_round_robin(self):
+        if not self.carga.especs:
+            print("Primero cargue los procesos (opción 1 o 7).")
+            return
+        while True:
+            entrada = input("Quantum de Round Robin (entero > 0) [4]: ").strip()
+            try:
+                quantum = int(entrada) if entrada else 4
+                planificador = ALGORITMOS["RR"](quantum)
+            except ValueError:
+                print("El quantum debe ser un entero mayor que cero.")
+                continue
+            break
+        self.ejecutar_algoritmo(planificador)
+
     def mostrar_procesos(self):
         if not self.carga.especs:
-            print("No hay procesos cargados. Use la opción 2.")
+            print("No hay procesos cargados. Use la opción 1 o 7.")
             return
         print(f"\n{'ID':<6}{'Llegada':>8}{'Ráfaga':>8}   Evento E/S")
         print("-" * 46)
@@ -36,7 +58,7 @@ class AppConsola:
 
     def ejecutar_algoritmo(self, planificador: Planificador):
         if not self.carga.especs:
-            print("Primero cargue los procesos (opción 2).")
+            print("Primero cargue los procesos (opción 1 o 7).")
             return
         sim = Simulador(self.carga.especs, planificador)  # copia nueva de la carga
         sim.ejecutar()
@@ -50,6 +72,8 @@ class AppConsola:
             "3": lambda: self.ejecutar_algoritmo(ALGORITMOS["FIFO"]()),
             "4": lambda: self.ejecutar_algoritmo(ALGORITMOS["SJF"]()),
             "5": lambda: self.ejecutar_algoritmo(ALGORITMOS["SRTF"]()),
+            "6": self.ejecutar_round_robin,
+            "7": self.cargar_caso_rr,
         }
         while True:
             print(self.MENU)

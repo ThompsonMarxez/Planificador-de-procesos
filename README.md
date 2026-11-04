@@ -1,9 +1,9 @@
 # Simulador de planificación de procesos de corto plazo
 
 Simulador por consola en Python 3 (solo biblioteca estándar).
-Algoritmos: **FIFO**, **SJF** (no apropiativo), **SRTF** (apropiativo), **Round Robin** y **prioridades**
-(estos dos últimos en integración, ver [Estado](#estado-de-la-integración)). Incluye el estado
-**Bloqueado** por eventos de E/S.
+Algoritmos disponibles: **FIFO**, **SJF** (no apropiativo), **SRTF** (apropiativo) y
+**Round Robin**. El algoritmo de **prioridades** sigue pendiente de integración
+(ver [Estado](#estado-de-la-integración)). Incluye el estado **Bloqueado** por eventos de E/S.
 
 ## Integrantes
 
@@ -37,10 +37,10 @@ simulador/
   algoritmos/
     base.py                  # Planificador (interfaz)
     fifo.py  sjf.py  srtf.py
-    round_robin.py           # pendiente (José Luna)
+    round_robin.py           # Round Robin con quantum configurable (José Luna)
     prioridad.py             # pendiente (Francisco)
     __init__.py              # registro ALGORITMOS
-tests/                       # regresión, motor y esqueletos de RR/prioridades
+tests/                       # regresión, motor, RR, consola RR y esqueleto de prioridades
 ```
 
 ## Clases
@@ -91,11 +91,41 @@ Desempates generales: primero el que llegó antes y luego el de menor identifica
 
 ## Quantum (Round Robin)
 
-- Un algoritmo con quantum expone `self.quantum` (entero > 0). Con 0 o negativo el simulador lanza `ValueError`.
+- `PlanificadorRoundRobin(quantum=4)` expone `self.quantum` (entero > 0). Su constructor
+  lanza `ValueError` ante cero, negativos, booleanos o valores que no sean enteros.
+- `seleccionar(listos)` devuelve el primero sin retirar ni reordenar elementos; el motor
+  garantiza que la cola no esté vacía y se encarga del despacho y la rotación.
 - El proceso ejecuta como máximo `quantum` unidades seguidas; si no termina, vuelve al **final** de la cola de listos.
 - Si no hay otros procesos listos, continúa ejecutando otro quantum sin ser interrumpido.
 - Si un proceso llega en el mismo instante en que vence un quantum, **entra a la cola antes** que el proceso interrumpido.
 - Un proceso que se bloquea o termina antes del quantum libera la CPU y el siguiente parte con un quantum completo.
+
+Round Robin es apropiativo **por tiempo**: el motor usa `quantum` para interrumpirlo.
+La bandera interna `apropiativo` se mantiene en `False` porque habilita otra vía de
+expropiación (por prioridad o tiempo restante), no el vencimiento del quantum.
+
+### Probar Round Robin desde el menú
+
+1. Ejecutar `python3 main.py` (o `python main.py`, según la instalación).
+2. Elegir **7** para cargar el caso Round Robin de 10 procesos, o **1** para el caso base.
+3. Elegir **6** e ingresar un quantum positivo; **Enter** usa **4**.
+4. Se muestran la traza, el Gantt y las métricas. Los valores inválidos se vuelven a pedir.
+   Se puede repetir la opción 6 con otro quantum sin modificar la carga original.
+
+También se puede usar directamente:
+
+```python
+from simulador.algoritmos import ALGORITMOS
+from simulador.modelos import CargaTrabajo
+from simulador.motor import Simulador
+from simulador.reportes import Reportero
+
+carga = CargaTrabajo()
+carga.cargar_caso_rr()
+sim = Simulador(carga.especs, ALGORITMOS["RR"](quantum=3))
+sim.ejecutar()
+print(Reportero.informe(sim))
+```
 
 ## Algoritmo con prioridades
 
@@ -133,15 +163,17 @@ Contrato del motor: `Simulador(especs, planificador).ejecutar()` y luego `Report
 - `tests/test_regresion.py`: FIFO, SJF y SRTF con el caso predefinido (promedios y salida completa).
 - `tests/test_motor.py`: espera sin bloqueo, ciclo de estados, métricas, Gantt y quantum.
 - `tests/test_carga.py` y `tests/test_casos.py`: validación del ingreso de procesos y de los casos de 10 procesos.
-- `tests/test_round_robin.py`, `tests/test_prioridad.py`: esqueletos omitidos hasta integrar los algoritmos.
+- `tests/test_round_robin.py`: validación del quantum, rotación, llegadas, E/S, métricas y casos límite de RR.
+- `tests/test_consola_rr.py`: carga del caso RR, ingreso de quantum y ejecución desde el menú.
+- `tests/test_prioridad.py`: esqueleto omitido hasta integrar prioridades.
 
 ## Estado de la integración
 
 - [x] FIFO, SJF, SRTF
 - [x] Motor con quantum, espera corregida y prioridad en el modelo
-- [ ] Round Robin
+- [x] Round Robin (algoritmo, registro, menú con quantum configurable y pruebas)
 - [ ] Prioridades
-- [ ] Menú final: registrar procesos, configurar quantum, ver última simulación, ayuda
+- [ ] Menú final: registrar procesos, ver última simulación, ayuda (quantum de RR ya disponible)
 
 ## Decisión de lenguaje
 

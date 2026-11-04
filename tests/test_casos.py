@@ -5,19 +5,9 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simulador.algoritmos import ALGORITMOS, Planificador    # noqa: E402
+from simulador.algoritmos import ALGORITMOS                  # noqa: E402
 from simulador.modelos import CargaTrabajo                   # noqa: E402
 from simulador.motor import Simulador                        # noqa: E402
-
-
-class RRPrueba(Planificador):
-    nombre = "RR-prueba"
-
-    def __init__(self, quantum):
-        self.quantum = quantum
-
-    def seleccionar(self, listos):
-        return listos[0]
 
 
 def cargar(metodo):
@@ -60,7 +50,7 @@ class PruebasCasos(unittest.TestCase):
     def test_rr_rota_la_cola(self):
         for q in (3, 4):
             with self.subTest(quantum=q):
-                sim = Simulador(cargar("cargar_caso_rr").especs, RRPrueba(q))
+                sim = Simulador(cargar("cargar_caso_rr").especs, ALGORITMOS["RR"](q))
                 sim.ejecutar()
                 self.assertEqual(len(sim.finalizados), 10)
                 self.assertIn("agota su quantum", "\n".join(sim.traza))
