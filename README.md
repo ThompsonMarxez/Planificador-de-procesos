@@ -12,7 +12,7 @@ Algoritmos disponibles: **FIFO**, **SJF** (no apropiativo), **SRTF** (apropiativ
 | Benjamin Zamora (motor) | Arquitectura, motor de simulación, integración |
 | José Luna | Round Robin (`simulador/algoritmos/round_robin.py`) |
 | Francisco | Algoritmo con prioridades (`simulador/algoritmos/prioridad.py`) |
-| Benja (menú) | Menú de consola (`simulador/consola.py`) |
+| Benja (menú) | Menú de consola (`simulador/consola.py`): procesos, quantum y última simulación |
 | Thomas | Pruebas (`tests/`) |
 
 ## Ejecución
@@ -104,13 +104,21 @@ Round Robin es apropiativo **por tiempo**: el motor usa `quantum` para interrump
 La bandera interna `apropiativo` se mantiene en `False` porque habilita otra vía de
 expropiación (por prioridad o tiempo restante), no el vencimiento del quantum.
 
-### Probar Round Robin desde el menú
+### Procesos y quantum desde el menú
 
 1. Ejecutar `python3 main.py` (o `python main.py`, según la instalación).
-2. Elegir **7** para cargar el caso Round Robin de 10 procesos, o **1** para el caso base.
-3. Elegir **6** e ingresar un quantum positivo; **Enter** usa **4**.
-4. Se muestran la traza, el Gantt y las métricas. Los valores inválidos se vuelven a pedir.
-   Se puede repetir la opción 6 con otro quantum sin modificar la carga original.
+2. Elegir **8** para registrar un proceso indicando su identificador, tiempo de llegada
+   (entero mayor o igual a cero) y ráfaga de CPU (entero mayor que cero). Los ID duplicados
+   y los datos inválidos se rechazan.
+3. Elegir **2** para consultar los procesos registrados, **1** para cargar el caso base, o
+   **7** para cargar el caso de Round Robin de 10 procesos.
+4. Elegir **9** para configurar el quantum de Round Robin; el valor se conserva mientras
+   la aplicación esté abierta y debe ser un entero positivo. Su valor inicial es **4**.
+5. Elegir **6** para ejecutar Round Robin. Se puede aceptar el quantum configurado con
+   **Enter** o ingresar otro solo para esa ejecución. Se muestran la traza, el Gantt y las
+   métricas.
+6. Elegir **10** para volver a ver la traza y el informe de la última simulación. La opción
+   informa si aún no se ha ejecutado ninguna simulación.
 
 También se puede usar directamente:
 
@@ -164,7 +172,7 @@ Contrato del motor: `Simulador(especs, planificador).ejecutar()` y luego `Report
 - `tests/test_motor.py`: espera sin bloqueo, ciclo de estados, métricas, Gantt y quantum.
 - `tests/test_carga.py` y `tests/test_casos.py`: validación del ingreso de procesos y de los casos de 10 procesos.
 - `tests/test_round_robin.py`: validación del quantum, rotación, llegadas, E/S, métricas y casos límite de RR.
-- `tests/test_consola_rr.py`: carga del caso RR, ingreso de quantum y ejecución desde el menú.
+- `tests/test_consola_rr.py`: carga, quantum, registro de procesos y última simulación del menú.
 - `tests/test_prioridad.py`: esqueleto omitido hasta integrar prioridades.
 
 ## Estado de la integración
@@ -173,7 +181,8 @@ Contrato del motor: `Simulador(especs, planificador).ejecutar()` y luego `Report
 - [x] Motor con quantum, espera corregida y prioridad en el modelo
 - [x] Round Robin (algoritmo, registro, menú con quantum configurable y pruebas)
 - [ ] Prioridades
-- [ ] Menú final: registrar procesos, ver última simulación, ayuda (quantum de RR ya disponible)
+- [x] Menú: registrar procesos y configurar el quantum de Round Robin
+- [x] Menú: ver última simulación
 
 ## Decisión de lenguaje
 

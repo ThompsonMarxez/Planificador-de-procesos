@@ -84,6 +84,50 @@ class PruebasConsolaRoundRobin(unittest.TestCase):
         self.assertIn("Todos los procesos finalizaron", texto)
         self.assertIn("Fin del programa.", texto)
 
+    def test_menu_registra_proceso(self):
+        with patch("builtins.input", side_effect=["8", "P1", "0", "5", "0"]), \
+                redirect_stdout(self.salida):
+            self.app.ejecutar()
+        self.assertEqual(len(self.app.carga.especs), 1)
+        proceso = self.app.carga.especs[0]
+        self.assertEqual((proceso.pid, proceso.llegada, proceso.rafaga), ("P1", 0, 5))
+        self.assertIn("Proceso P1 registrado.", self.salida.getvalue())
+
+    def test_configurar_quantum_persistente_en_el_menu(self):
+        with patch("builtins.input", side_effect=["9", "3", "7", "6", "", "0"]), \
+                redirect_stdout(self.salida):
+            self.app.ejecutar()
+        texto = self.salida.getvalue()
+        self.assertEqual(self.app.quantum, 3)
+        self.assertIn("Quantum de Round Robin configurado en 3.", texto)
+        self.assertIn("Configurar quantum de Round Robin (actual: 3)", texto)
+        self.assertIn("agota su quantum de 3 u.", texto)
+
+    def test_configurar_quantum_rechaza_valores_invalidos(self):
+        with patch("builtins.input", side_effect=["0", "2.5", "5"]), \
+                redirect_stdout(self.salida):
+            self.app.configurar_quantum()
+        self.assertEqual(self.app.quantum, 5)
+        self.assertEqual(
+            self.salida.getvalue().count("El valor debe ser mayor que cero."), 1
+        )
+        self.assertEqual(
+            self.salida.getvalue().count("Ingrese un número entero válido."), 1
+        )
+
+    def test_ver_ultima_simulacion_antes_de_ejecutar(self):
+        with redirect_stdout(self.salida):
+            self.app.mostrar_ultima_simulacion()
+        self.assertIn("Aún no se ha ejecutado ninguna simulación.", self.salida.getvalue())
+
+    def test_menu_muestra_la_ultima_simulacion_sin_volver_a_ejecutarla(self):
+        with patch("builtins.input", side_effect=["1", "3", "10", "0"]), \
+                redirect_stdout(self.salida):
+            self.app.ejecutar()
+        texto = self.salida.getvalue()
+        self.assertEqual(texto.count("=== TRAZA DE SIMULACIÓN: FIFO ==="), 2)
+        self.assertEqual(texto.count("GANTT"), 2)
+        self.assertEqual(texto.count("Todos los procesos finalizaron en t="), 2)
 
 if __name__ == "__main__":
     unittest.main()
